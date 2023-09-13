@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+label {
+  @apply px-0 py-1 text-left;
+}
+option {
+  @apply mx-0 my-2 p-4 rounded-[10px] border-[none] text-left px-0 py-1;
+}
+select{
+  @apply mx-0 my-2 p-4 rounded-[10px] border-[none] text-[black];
+}
+input {
+  @apply  rounded-t mx-0 my-2 p-4  border-[none] text-[black] ;
+}
+body {
+  @apply max-w-[800px] mx-auto my-0 p-[100px] text-[white] bg-slate-800;
+}
+button {
+  @apply cursor-pointer text-[white] bg-[white] p-5 border-[none];
+}
+
+.link-btn {
+  @apply text-[white] underline;
+  background: none;
+}
+
