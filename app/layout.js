@@ -3,7 +3,7 @@ import { Navigation } from "./components/Navigation"
 import '../styles/globals.css'
 import{AuthContextProvider} from './context/AuthContext'
 
-export const metadata = {
+const metadata = {
   title: 'DocApp v1',
   description: 'Codded by: Mokka',
 }
