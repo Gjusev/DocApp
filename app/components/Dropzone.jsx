@@ -1,5 +1,5 @@
 'use client'
-import { useCallback, useMemo,useEffect, useState } from 'react'
+import { useCallback, useContext  ,useEffect, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { ArrowUpTrayIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import { Canvas } from 'react-three-fiber';
@@ -7,11 +7,13 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import { OrbitControls } from '@react-three/drei';
 import { useThree } from 'react-three-fiber';
 
+
+
 const Dropzone = ({ className,onProcessModels }) => {
   const [files, setFiles] = useState([])
   const [rejected, setRejected] = useState([])
   const [processedModels, setProcessedModels] = useState([]);
-
+  
   const ModelPreview = ({ file }) => {
     const { scene } = useThree();
 

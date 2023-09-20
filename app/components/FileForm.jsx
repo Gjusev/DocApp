@@ -1,9 +1,15 @@
 "use client"
-import React ,{useState}from 'react'
+import React ,{useEffect, useState}from 'react'
 import { useForm } from "react-hook-form";
 import { TemplateHandler } from 'easy-template-x';
-
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
+import { db } from "../../firebase/firebase.js";
+import { doc, getDoc } from "firebase/firestore";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 function DateDisplay()  {
+
+  
     const currDay = new Date().getDate();
     const currMonth = new Date().toLocaleString([], {
       month: 'long',
@@ -46,11 +52,51 @@ function calculateTotalCost(productos) {
   
     return totalCost;
   }
+  const loadImage = async (url) => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return blob;
+  };
+ 
 function FileForm({processedModels}) {
-  console.log(processedModels)
+  const [img, setImg] = useState();
+      
+  
+  //console.log(processedModels)
+  const [companyInfo, setCompanyInfo] = useState({
+    email: '',
+    phone: '',
+    address: ''
+  });
+  const storage = getStorage();
+  // Define your state variables
+  const { currentUser } = useContext(AuthContext);
+  useEffect(() => {
+    // Assuming you have some method to fetch company data from Firebase
+    // and assuming that method is asynchronous
+    const fetchCompanyInfo = async () => {
+      try {
+        
+    
+        const userDoc = await getDoc(doc(db, "users", currentUser.email));
+        console.log(currentUser.email)
+        
+        const companyData = {photoUrl: userDoc.data().photoURL,name:userDoc.data().companyName ,email:userDoc.data().companyEmail, phone:userDoc.data().companyPhone, address: userDoc.data().companyAddress}; // Replace with actual fetch method
+        
+        console.log(companyData)
+        setCompanyInfo(companyData);
+      } catch (error) {
+        console.error('Error fetching company data:', error);
+      }
+    }
+    fetchCompanyInfo();
+  }, []); 
+  useEffect(() => {
+  loadImage(companyInfo.photoUrl).then((res) => setImg(res));;
+    
+  }, []);
 
-    const { handleSubmit, register } = useForm();
-
+  const { handleSubmit, register } = useForm();
     const [productos, setProductos] = useState(
       processedModels.map((model) => ({
         producto: '',
@@ -79,6 +125,11 @@ function FileForm({processedModels}) {
       nuevosProductos[index].precio = e.target.value;
       setProductos(nuevosProductos);
     }
+    const handleChangeProducto = (index, e) => {
+      const nuevosProductos = [...productos];
+      nuevosProductos[index].producto = e.target.value;
+      setProductos(nuevosProductos);
+    }
     
     const handleChangeProcessedModel = (index, processedModel) => {
       const nuevosProductos = [...productos];
@@ -91,28 +142,32 @@ function FileForm({processedModels}) {
     const templateDoc = await fetch('/template.docx'); // Ruta relativa a la carpeta public
     const templateBlob = await templateDoc.blob();
     const handler = new TemplateHandler();
-
-    const totalCost = calculateTotalCost(productos);
     
+    const totalCost = calculateTotalCost(productos);
+
+
     const itemsData = productos.map((producto) => ({
         name: producto.producto,
         quantity: producto.cantidad,
         price: producto.precio,
         cost: producto.cantidad * producto.precio
       }));
-      console.log(typeof(itemsData))
-  
+      console.log(typeof(companyInfo.photoUrl))
+
+     
+      console.log(typeof(img))
       const data= {
         name:[e.nombre],
         surname:[e.apellido],
         invoice:[e.numeroFactura],
         company:
         [
-           { name: e.nombreCompania,email: e.emailCompania,phone: e.telefonoCompania}
+           { name: e.nombreCompania,email: e.emailCompania,phone: e.telefonoCompania, address: companyInfo.address}
         ],
         date:[DateDisplay()],
         total:[totalCost.toString()],
-        items: itemsData
+        items: itemsData,
+        logo:{_type:"image",source:img,format:img ? img.type : undefined,width:200,height:200}
       }
       console.log(data)
 
@@ -133,17 +188,36 @@ function FileForm({processedModels}) {
               </label>
               
               <label>
-                <p>Nombre de la Compañía</p>
-                <input name="nombreCompania" className='mr-4 '{...register('nombreCompania', { required: true })} />
-              </label>
-              <label>
-                <p>Email de la Compañía</p>
-                <input name="emailCompania" className='mr-4 '{...register('emailCompania', { required: true })} />
-              </label>
-              <label>
-                <p>Teléfono de la Compañía</p>
-                <input name="telefonoCompania" className='mr-4 '{...register('telefonoCompania', { required: true })} />
-              </label>
+  <p>Nombre de la Compañía</p>
+  <input
+    value={companyInfo.name  || ''}
+    name="nombreCompania"
+    className='mr-4'
+    readOnly={!!currentUser} // Make it read-only if there is a currentUser
+    {...register('nombreCompania', { required: true })}
+  />
+</label>
+<label>
+  <p>Email de la Compañía</p>
+  <input
+    value={companyInfo.email || ''}
+    name="emailCompania"
+    className='mr-4'
+    readOnly={!!currentUser} // Make it read-only if there is a currentUser
+    {...register('emailCompania', { required: true })}
+  />
+</label>
+<label>
+  <p>Teléfono de la Compañía</p>
+  <input
+    value={companyInfo.phone || ''}
+    name="telefonoCompania"
+    className='mr-4'
+    readOnly={!!currentUser} // Make it read-only if there is a currentUser
+    {...register('telefonoCompania', { required: true })}
+  />
+</label>
+
             </fieldset>
           </div>
           <div style={{ flexBasis: '45%' }}>

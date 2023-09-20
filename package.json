@@ -19,6 +19,7 @@
     "@react-three/fiber": "^8.14.1",
     "@types/three": "^0.156.0",
     "autoprefixer": "10.4.15",
+    "axios": "^1.5.0",
     "decompress": "^4.2.1",
     "docx-templates": "^4.11.3",
     "easy-template-x": "^3.2.0",

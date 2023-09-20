@@ -7,10 +7,10 @@ import FileForm from '../components/FileForm.jsx';
 
  
 export default function Home() {
-
+  
   const [processedModels, setProcessedModels] = useState([]);
   const [showFileForm, setShowFileForm] = useState(false);
-  
+  console.log()
   const processModels = (models) => {
     console.log(models);
   setProcessedModels(models);
