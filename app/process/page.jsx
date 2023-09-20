@@ -1,18 +1,15 @@
-"use client"
+'use client'
 import Dropzone from '../components/Dropzone'
 import React, { useState } from 'react';
-import FileForm from '../components/FileForm.jsx';
+import FileForm from '../components/FileForm.jsx'
 
-
-
- 
 export default function Home() {
   
   const [processedModels, setProcessedModels] = useState([]);
   const [showFileForm, setShowFileForm] = useState(false);
-  console.log()
+  
   const processModels = (models) => {
-    console.log(models);
+  
   setProcessedModels(models);
   setShowFileForm(true); // Show FileForm after processing models
   }
