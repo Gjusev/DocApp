@@ -14,14 +14,10 @@ input {
   @apply  rounded-t mx-0 my-2 p-4  border-[none] text-[black] ;
 }
 body {
-  @apply max-w-[800px] mx-auto my-0 p-[100px] text-[white] bg-slate-800;
+  @apply max-w-[1000px] mx-auto my-0 p-[50px] text-[white] bg-slate-800;
 }
 button {
   @apply cursor-pointer text-slate-800 bg-[white] p-5 border-[none];
 }
 
-.link-btn {
-  @apply text-[white] underline;
-  background: none;
-}
 

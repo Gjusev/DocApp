@@ -16,9 +16,10 @@ export default function Home() {
 
 
   return (
-    <section className='py-24'>
-      <div className='container'>
-        <h1 className='text-3xl font-bold'>Upload Files</h1>
+    <section className='py-10'>
+      <div className='container '>
+        {!showFileForm && <h1 className='text-3xl font-bold'>Upload Files</h1>}
+        {showFileForm && <h1 className='text-3xl font-bold'>File Form</h1>}
         {!showFileForm && <Dropzone className='p-16 mt-10 border border-neutral-200' onProcessModels={processModels} />}
         {showFileForm && <FileForm processedModels={processedModels} />}
     

@@ -20,11 +20,12 @@ function Login(props) {
   };
 
   return (
-    <div>
-      <h2  >Login</h2>
+    <div className="flex items-center justify-center h-screen bg-slate-800">
+    <div className="w-full max-w-md p-8 rounded bg-slate-600">
+      <h2 className="mb-6 text-3xl font-bold text-white underline">Log In  </h2>
       <form onSubmit={handleLogin}>
         <div>
-          <label htmlFor="email">Email:</label>
+          <label htmlFor="email" >Email:</label>
           <input
             type="email"
             id="email"
@@ -39,13 +40,16 @@ function Login(props) {
             type="password"
             id="password"
             value={password}
+            
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
-        <button  >Log In</button>
+        <button           className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700"
+ >Log In</button>
       </form>
-      <button className="link-btn" onClick={() => props.onFormSwitch('register')}>Don't have an account? Register here.</button>
+      <button className="justify-center block mt-4 underline" onClick={() => props.onFormSwitch('register')}>Don't have an account? Register here.</button>
+    </div>
     </div>
   );
 };

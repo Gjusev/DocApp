@@ -50,10 +50,11 @@ function Register(props) {
   };
 
   return (
-    <div>
-      <h2>Register</h2>
-      <form onSubmit={handleRegister}>
-        <div>
+    <div className="flex items-center justify-center h-screen bg-slate-800">
+    <div className="w-full max-w-md p-8 rounded bg-slate-600">
+      <h2 className="mb-6 text-3xl font-bold text-white underline">Register</h2>
+      <form onSubmit={handleRegister} className="space-x-1 space-y-4">
+        <div  className="space-x-1 ">
           <label htmlFor="email">Email:</label>
           <input
             type="email"
@@ -86,16 +87,16 @@ function Register(props) {
           </select>
         </div>
         {userType === 'normal' && (
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={isCompanyEmailAvailable}
-              onChange={() => setIsCompanyEmailAvailable(!isCompanyEmailAvailable)}
-            />
-            Company Email available
-          </label>
-        </div>)}
+        <div className="flex items-center space-x-2">
+        <input
+          type="checkbox"
+          id="availableCheckbox"
+          checked={isCompanyEmailAvailable}
+          onChange={() => setIsCompanyEmailAvailable(!isCompanyEmailAvailable)}
+          className="w-6 h-6 p-1 border border-gray-600 rounded"
+        />
+        <label htmlFor="availableCheckbox" className="text-white">Company Email available</label>
+      </div>)}
         
         {isCompanyEmailAvailable && (
           <div>
@@ -111,14 +112,16 @@ function Register(props) {
         )}
         {userType === 'company' && (
           <>
-          <label>
-            <input
-              type="checkbox"
-              checked={!sameCompany}
-              onChange={() => setSameCompany(!sameCompany)}
-            />
-            Same Company Email as User Email
-          </label>
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="sameCompanyCheckbox"
+                checked={!sameCompany}
+                onChange={() => setSameCompany(!sameCompany)}
+                className="w-6 h-6 p-1 border border-gray-600 rounded"
+              />
+              <label htmlFor="sameCompanyCheckbox" className="text-white">Same Company Email as User Email</label>
+            </div>
           {sameCompany && (<div>
               <label htmlFor="companyEmail">Company Email:</label>
               <input
@@ -166,17 +169,27 @@ function Register(props) {
                 type="file"
                 id="photo"
                 accept="image/*"
+                className='text-white bg-slate-800 hover:underline'
                 onChange={(e) => setPhotoFile(e.target.files[0])}
                 required
               />
             </div>
           </>
         )}
-        <button>Sign Up</button>
+        <button
+          type="submit"
+          className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700"
+        >
+          Sign Up
+        </button>
       </form>
-      <button className="link-btn" onClick={() => props.onFormSwitch('login')}>
+      <button
+        className="justify-center block mt-4 underline"
+        onClick={() => props.onFormSwitch('login')}
+      >
         Already have an account? Login here.
       </button>
+    </div>
     </div>
   );
 }

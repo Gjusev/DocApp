@@ -34,7 +34,7 @@ export default async function signUp(
       // Normal user linked to company
       const companyDoc = await getDoc(doc(db, "users", companyEmail))
       console.log("companyDoc", companyDoc)
-      await userDoc.update({ companyPhone:companyDoc.data().companyPhone, companyAddress:companyDoc.data().companyAddress,photoURL:companyDoc.data().photoURL });
+      await userDoc.update({ companyName:companyDoc.data().companyName,companyPhone:companyDoc.data().companyPhone, companyAddress:companyDoc.data().companyAddress,photoURL:companyDoc.data().photoURL });
     }
     
     console.log(`Sign up with email: ${email} and password: ${password} and userType: ${userType}`);

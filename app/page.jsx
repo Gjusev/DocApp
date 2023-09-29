@@ -31,13 +31,13 @@ function HomePage() {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
       <div style={{ width: '50%', padding: '20px' }}>
-        <h1>Bienvenido</h1>
-        <p>Texto de la mitad izquierda.</p>
+        <h1>Simplify your 3D model billing and management process with us!</h1>
+        
       </div>
       <div style={{ width: '50%', padding: '20px' }}>
       {currentUser ? (
         <div className="mt-8">
-          <h1>Bienvenido {currentUser.email}</h1>
+          <h1>Welcome {currentUser.email}</h1>
         </div>
       ) : (
         currentForm === "login" ? <Login onFormSwitch={toggleForm} /> : <Register onFormSwitch={toggleForm} />

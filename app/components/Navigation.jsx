@@ -1,25 +1,51 @@
-"use client"
-import {useContext}from 'react'
-import Link from "next/link"
-import styles from './Navigation.module.css'
-import{AuthContext} from '../context/AuthContext'
-import { auth } from '../../firebase/firebase'; 
-const links = [{
-  label:'Home',
-  route:'/'
-},{
-  label:'About',
-  route:'/about'
-}]
+import { useContext } from 'react';
+import Link from 'next/link';
+import styles from './Navigation.module.css';
+import { AuthContext } from '../context/AuthContext';
+import { auth } from '../../firebase/firebase';
+const linksU = [
+  {
+    label: 'Home',
+    route: '/'
+  },
+  {
+    label: 'About',
+    route: '/about'
+  }
+];
 
-export function Navigation(){
+const linksN = [
+  {
+    label: 'Home',
+    route: '/'
+  },
+  {
+    label: 'About',
+    route: '/about'
+  },
+  {
+    label: 'Process',
+    route: '/process'
+  }
+];
 
-  const  currentUser  = useContext(AuthContext)
+const  Navigation = () => {
+ 
+  const { currentUser } = useContext(AuthContext);
+  const links = currentUser !== null ? linksN : linksU;
+
+
+  const handleLogOut = () => {
+
+    auth.signOut();
+    window.location.href = '/';
+  }
 
   return (
     <header className={styles.header}>
       <nav>
-        <ul className={styles.navigation}>
+        <ul className={styles.navigation} >
+
           {links.map(({ label, route }) => (
             <li key={route}>
               <Link href={route}>
@@ -27,9 +53,11 @@ export function Navigation(){
               </Link>
             </li>
           ))}
-          {currentUser && (
+          {currentUser !== null && (  // <-- Verifica aquí si currentUser no es null
             <li>
-              <button onClick={() => auth.signOut()}>Logout</button>
+              <button
+               className='text-white bg-slate-800 hover:underline'
+               onClick={handleLogOut}>Logout</button>
             </li>
           )}
         </ul>
@@ -37,3 +65,4 @@ export function Navigation(){
     </header>
   );
 }
+export default Navigation;

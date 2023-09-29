@@ -55,14 +55,15 @@ function calculateTotalCost(productos) {
   const loadImage = async (url) => {
     const response = await fetch(url);
     const blob = await response.blob();
+    console.log(blob)
+    console.log("WER")
     return blob;
   };
  
 function FileForm({processedModels}) {
   const [img, setImg] = useState();
-      
   
-  //console.log(processedModels)
+  
   const [companyInfo, setCompanyInfo] = useState({
     email: '',
     phone: '',
@@ -79,11 +80,8 @@ function FileForm({processedModels}) {
         
     
         const userDoc = await getDoc(doc(db, "users", currentUser.email));
-        console.log(currentUser.email)
-        
         const companyData = {photoUrl: userDoc.data().photoURL,name:userDoc.data().companyName ,email:userDoc.data().companyEmail, phone:userDoc.data().companyPhone, address: userDoc.data().companyAddress}; // Replace with actual fetch method
-        
-        console.log(companyData)
+        console.log(companyData.photoUrl)
         setCompanyInfo(companyData);
       } catch (error) {
         console.error('Error fetching company data:', error);
@@ -92,21 +90,22 @@ function FileForm({processedModels}) {
     fetchCompanyInfo();
   }, []); 
   useEffect(() => {
+    // Assuming you have some method to fetch company data from Firebase
   loadImage(companyInfo.photoUrl).then((res) => setImg(res));;
     
   }, []);
-
   const { handleSubmit, register } = useForm();
     const [productos, setProductos] = useState(
       processedModels.map((model) => ({
         producto: '',
         cantidad: '',
+        medida:'',
         precio: '',
         processedModel: model,
       })))
 
       const handleAgregarFila = () => {
-        setProductos([...productos, { producto: '', cantidad: '', precio: '', processedModel: '' }]);
+        setProductos([...productos, { producto: '', cantidad: '',medida:'', precio: '', processedModel: '' }]);
       };
   
     const handleEliminarFila = (index) => {
@@ -130,6 +129,12 @@ function FileForm({processedModels}) {
       nuevosProductos[index].producto = e.target.value;
       setProductos(nuevosProductos);
     }
+    const handleChangeMedida = (index, e) => {
+      const nuevosProductos = [...productos];
+      nuevosProductos[index].medida = e.target.value;
+      setProductos(nuevosProductos);
+    }
+    
     
     const handleChangeProcessedModel = (index, processedModel) => {
       const nuevosProductos = [...productos];
@@ -149,13 +154,13 @@ function FileForm({processedModels}) {
     const itemsData = productos.map((producto) => ({
         name: producto.producto,
         quantity: producto.cantidad,
+        medida: producto.medida,
         price: producto.precio,
         cost: producto.cantidad * producto.precio
       }));
       console.log(typeof(companyInfo.photoUrl))
 
      
-      console.log(typeof(img))
       const data= {
         name:[e.nombre],
         surname:[e.apellido],
@@ -177,92 +182,93 @@ function FileForm({processedModels}) {
   
 
  return (
-    <div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div  className='pb-3 mt-10 mr-4 text-lg font-semibold text-white title' style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <div style={{ flexBasis: '45%' }}>
-            <fieldset>
+  <div>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="flex p-5 pb-3 mt-10 mr-4 text-2xl font-semibold text-white rounded bg-slate-600 border-white-500 title">
+      <div >
+          <fieldset >
               <label>
-                <p>Nombre</p>
-                <input name="nombre"  className='mr-4 '{...register('nombre', { required: true })} />
+                <p>Name</p>
+                <input name="nombre"  
+                className='mb-10 mr-4' 
+                {...register('nombre', { required: true })} />
               </label>
               
               <label>
-  <p>Nombre de la Compañía</p>
-  <input
-    value={companyInfo.name  || ''}
-    name="nombreCompania"
-    className='mr-4'
-    readOnly={!!currentUser} // Make it read-only if there is a currentUser
-    {...register('nombreCompania', { required: true })}
-  />
-</label>
-<label>
-  <p>Email de la Compañía</p>
-  <input
-    value={companyInfo.email || ''}
-    name="emailCompania"
-    className='mr-4'
-    readOnly={!!currentUser} // Make it read-only if there is a currentUser
-    {...register('emailCompania', { required: true })}
-  />
-</label>
-<label>
-  <p>Teléfono de la Compañía</p>
-  <input
-    value={companyInfo.phone || ''}
-    name="telefonoCompania"
-    className='mr-4'
-    readOnly={!!currentUser} // Make it read-only if there is a currentUser
-    {...register('telefonoCompania', { required: true })}
-  />
-</label>
+                <p>Company Name</p>
+                <input
+                  value={companyInfo.name  || ''}
+                  name="nombreCompania"
+                  className='mb-10 mr-4 '
+                  readOnly={!!currentUser} // Make it read-only if there is a currentUser
+                  {...register('nombreCompania', { required: true })}
+                />
+              </label>
+              <label>
+                <p>Company Email</p>
+                <input
+                  value={companyInfo.email || ''}
+                  name="emailCompania"
+                  className='mb-10 mr-4 '
+                  readOnly={!!currentUser} // Make it read-only if there is a currentUser
+                  {...register('emailCompania', { required: true })}
+                />
+              </label>
+              <label>
+                <p>Company Phone</p>
+                <input
+                  value={companyInfo.phone || ''}
+                  name="telefonoCompania"
+                  className='mb-10 mr-4'
+                  readOnly={!!currentUser} // Make it read-only if there is a currentUser
+                  {...register('telefonoCompania', { required: true })}
+                />
+              </label>
 
             </fieldset>
           </div>
-          <div style={{ flexBasis: '45%' }}>
+          <div className='ml-10' >
             <fieldset>
             <label>
-                <p>Apellido</p>
-                <input name="apellido" {...register('apellido', { required: true })} />
+                <p>Surname</p>
+                <input name="apellido"  className='mb-10' {...register('apellido', { required: true })} />
               </label>
               <label>
-                <p>Número de Factura</p>
-                <input name="numeroFactura" {...register('numeroFactura', { required: true })} />
+                <p>Invoice Number</p>
+                <input name="numeroFactura"  className='mb-10 ' {...register('numeroFactura', { required: true })} />
               </label>
-              <label>
-                <p>Nombre del Trabajador</p>
-                <input name="nombreTrabajador" {...register('nombreTrabajador', { required: true })} />
-              </label>
-              {/* Agrega aquí los campos adicionales de la segunda columna si los tienes */}
             </fieldset>
           </div>
-        </div>
-        <div style={{ marginTop: '20px' }}>
-      <fieldset>
-        <label>
-          <p>Tabla de Productos</p>
-          <table>
+        
+        </div>  
+        <button
+        type="submit"
+        className="px-20 py-5 mt-8 mb-8 mr-4 text-white border rounded border-white-500 hover:bg-blue-500 hover:text-white"
+      >
+        Submit
+      </button>  
+      <div >
+        <fieldset>
+          <label className="block mb-2 text-3xl font-semibold text-white title">Tabla de Productos</label>
+          <table className="p-5 pb-5 text-white rounded mt-7 bg-slate-600">
             <thead>
               <tr>
-              <th>Processed Models</th>
-                <th>Producto</th>
-                
-                <th>Cantidad</th>
-                <th>Precio</th>
-                <th>Acciones</th>
+                <th>Processed Models</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Measurement</th>
+                <th>Price</th>
+                <th>Delete</th>
               </tr>
             </thead>
             <tbody>
               {productos.map((producto, index) => (
                 <tr key={index}>
-                 <td>
-  {producto.processedModel && (
-    <div>
-        {producto.processedModel.name}
-    </div>
-  )}
-</td>
+                  <td>
+                    {producto.processedModel && (
+                      <div>{producto.processedModel.name}</div>
+                    )}
+                  </td>
                   <td>
                     <input
                       type="text"
@@ -271,12 +277,19 @@ function FileForm({processedModels}) {
                       className="mr-4"
                     />
                   </td>
-                  
                   <td>
                     <input
                       type="text"
                       value={producto.cantidad}
                       onChange={(e) => handleChangeCantidad(index, e)}
+                      className="mr-4"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      value={producto.medida}
+                      onChange={(e) => handleChangeMedida(index, e)}
                       className="mr-4"
                     />
                   </td>
@@ -291,10 +304,10 @@ function FileForm({processedModels}) {
                   <td>
                     <button
                       type="button"
-                      className='border rounded-t-[10px] hover:bg-rose-400 border-white-500 hover:text-white'
+                      className='border rounded-t-[10px] text-white hover:bg-rose-400 border-white-500 hover:text-white'
                       onClick={() => handleEliminarFila(index)}
                     >
-                      Eliminar
+                      Delete
                     </button>
                   </td>
                 </tr>
@@ -303,17 +316,17 @@ function FileForm({processedModels}) {
           </table>
           <button
             type="button"
-            className="px-4 py-2 mr-4 border rounded border-white-500 hover:bg-blue-500 hover:text-white"
+            className="px-4 py-2 mt-4 mr-4 text-white border rounded border-white-500 hover:bg-blue-500 hover:text-white"
             onClick={handleAgregarFila}
           >
-            Agregar Producto
+            Add Product
           </button>
-        </label>
-      </fieldset>
-    </div>
-        <button type="submit" className="px-4 py-2 mt-10 mr-4 border rounded border-white-500 hover:bg-blue-500 hover:text-white">Submit</button>
+        </fieldset>
+      </div>
       </form>
     </div>
+    
+    
   )
   
 }
